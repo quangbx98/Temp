@@ -5,6 +5,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.fsoc.template.R
+import com.fsoc.template.common.extension.show
 import com.fsoc.template.presentation.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -41,5 +42,9 @@ class MainActivity : BaseActivity() {
 
     fun selectBottomNavMenu(itemId: Int) {
         mainBottomNavView.selectedItemId = itemId
+    }
+
+    fun hideBottomNavMenu(isShow: Boolean = true) {
+        mainBottomNavView.show(isShow)
     }
 }

@@ -2,6 +2,7 @@ package com.fsoc.template.common.di
 
 import com.fsoc.template.common.di.module.*
 import com.fsoc.template.presentation.main.detail.DetailFragment
+import com.fsoc.template.presentation.main.favorite.DetailFavoriteFragment
 import com.fsoc.template.presentation.main.favorite.FavoriteFragment
 import com.fsoc.template.presentation.main.home.HomeFragment
 import com.fsoc.template.presentation.main.setting.SettingFragment
@@ -16,4 +17,5 @@ interface AppComponent {
     fun inject(fragment: FavoriteFragment)
     fun inject(fragment: SettingFragment)
     fun inject(fragment: DetailFragment)
+    fun inject(fragment: DetailFavoriteFragment)
 }

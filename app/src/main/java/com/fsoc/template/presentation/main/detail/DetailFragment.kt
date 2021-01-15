@@ -6,7 +6,7 @@ import com.fsoc.template.common.di.AppComponent
 import com.fsoc.template.presentation.base.BaseFragment
 import com.fsoc.template.presentation.main.MainViewModel
 
-class DetailFragment: BaseFragment<MainViewModel>() {
+class DetailFragment : BaseFragment<MainViewModel>() {
     override fun inject(appComponent: AppComponent) {
         appComponent.inject(this)
     }
@@ -16,7 +16,8 @@ class DetailFragment: BaseFragment<MainViewModel>() {
     }
 
     override fun initViewModel() {
-        viewModel = ViewModelProviders.of(activity?:return, viewModelFactory).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity ?: return, viewModelFactory)
+            .get(MainViewModel::class.java)
     }
 
     override fun setUpView() {
@@ -28,6 +29,6 @@ class DetailFragment: BaseFragment<MainViewModel>() {
     }
 
     override fun fireData() {
-        viewModel.checkAppExpire()
+//        viewModel.checkAppExpire()
     }
 }

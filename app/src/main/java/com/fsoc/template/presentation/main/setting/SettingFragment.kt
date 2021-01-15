@@ -26,6 +26,6 @@ class SettingFragment: BaseFragment<MainViewModel>() {
     }
 
     override fun fireData() {
-        viewModel.checkAppExpire()
+//        viewModel.checkAppExpire()
     }
 }

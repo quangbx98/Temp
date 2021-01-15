@@ -43,6 +43,6 @@ class HomeFragment: BaseFragment<MainViewModel>() {
     }
 
     override fun fireData() {
-        viewModel.checkAppExpire()
+//        viewModel.checkAppExpire()
     }
 }

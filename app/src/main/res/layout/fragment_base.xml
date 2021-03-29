@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:padding="20dp"
-            android:src="@drawable/ic_arrow_back"
+            app:srcCompat="@drawable/ic_arrow_back"
             android:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -61,7 +62,7 @@
         android:gravity="center"
         android:lines="1"
         android:textColor="@android:color/holo_red_light"
-        android:textSize="10sp"
+        android:textSize="@dimen/dimen_10sp"
         android:visibility="gone"
         tools:text="Error" />
 

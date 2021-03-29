@@ -343,4 +343,9 @@ abstract class BaseFragment<T : BaseViewModel> : Fragment() {
         }
         return false
     }
+
+    fun hideToolbarMenu(isShow: Boolean) {
+        toolbarFragment.show(isShow)
+        line.show(isShow)
+    }
 }

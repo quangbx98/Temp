@@ -22,6 +22,7 @@ android {
         versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -119,6 +120,9 @@ dependencies {
     // Check leak memory
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0'
 
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
+    implementation 'me.relex:circleindicator:2.1.4'
 
     // firebase
 //    implementation 'com.google.firebase:firebase-core:17.4.1'

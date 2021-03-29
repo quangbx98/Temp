@@ -14,6 +14,11 @@
         android:label="Favorite"
         tools:layout="@layout/fragment_favorite" />
     <fragment
+        android:id="@+id/detailFavoriteFragment"
+        android:name="com.fsoc.template.presentation.main.favorite.DetailFavoriteFragment"
+        android:label="Favorite"
+        tools:layout="@layout/fragment_favorite" />
+    <fragment
         android:id="@+id/settingFragment"
         android:name="com.fsoc.template.presentation.main.setting.SettingFragment"
         android:label="Setting"

@@ -1,81 +1,13 @@
 version: 2.1
 
-defaults: &defaults
-  working_directory: ~/code
-  docker:
-    - image: circleci/android@sha256:57mTdPvOBOnVDfRnwBQCBLjS0rmAHDYyxrBZuBxHAZY
-
-commands:
-  setup_gradle:
-    steps:
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-      - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-  setup_gem:
-    steps:
-      - restore_cache:
-          key: gems-{{ checksum "Gemfile.lock" }}
-      - run:
-          name: Install RubyGems
-          command: bundle install --path vendor/bundle
-      - save_cache:
-          key: gems-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
-  step_lint_danger:
-    steps:
-      - run:
-          name: Lint
-          command: ./gradlew --stacktrace :app:ktlintCheck detektCheck
-      - run:
-          name: Run Danger
-          command: bundle exec danger
-  step_build:
-    steps:
-      - run:
-          name: Run Tests
-          command: ./gradlew -w clean testDevelopReleaseUnitTest
-      - run:
-          name: Run Build
-          command: ./gradlew -w clean assembleDevelopRelease
-          no_output_timeout: 30m
-  step_release:
-    steps:
-      - run:
-          name: Release Note & Run Upload (Firebase AppDistribution)
-          command: |
-            echo $(git log --format=%B -n 1 $CIRCLE_SHA1) > ./app/release_notes.txt
-            ./gradlew appDistributionUploadDevelopRelease
+orbs:
+  android: circleci/android@0.2.1
 
 jobs:
-  danger:
-    <<: *defaults
-    steps:
-      - checkout
-      - setup_gradle
-      - setup_gem
-      - step_lint_danger
-  build-and-test:
-    <<: *defaults
-    steps:
-      - checkout
-      - setup_gradle
-      - step_build
-      - step_release
+  build:
+    executor: android/android
 
-workflows:
-  version: 2
-  build_test_lint:
-    jobs:
-      - build-and-test:
-          filters:
-            branches:
-              only:
-                - master
-                - develop
+    steps:
+      - checkout
+      - run:
+          command: ./gradlew build

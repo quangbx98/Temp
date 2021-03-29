@@ -1,0 +1,71 @@
+version: 2.1
+# Use a package of configuration called an orb.
+orbs:
+  # Declare a dependency on the welcome-orb
+  welcome: circleci/welcome-orb@0.4.1
+
+commands:
+  setup_gradle:
+    steps:
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+  setup_gem:
+    steps:
+      - restore_cache:
+          key: gems-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Install RubyGems
+          command: bundle install --path vendor/bundle
+      - save_cache:
+          key: gems-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+  step_lint_danger:
+    steps:
+      - run:
+          name: Lint
+          command: ./gradlew --stacktrace :app:ktlintCheck detektCheck
+      - run:
+          name: Run Danger
+          command: bundle exec danger
+  step_build:
+    steps:
+      - run:
+          name: Run Tests
+          command: ./gradlew -w clean testDevelopReleaseUnitTest
+      - run:
+          name: Run Build
+          command: ./gradlew -w clean assembleDevelopRelease
+          no_output_timeout: 30m
+  step_release:
+    steps:
+      - run:
+          name: Release Note & Run Upload (Firebase AppDistribution)
+          command: |
+            echo $(git log --format=%B -n 1 $CIRCLE_SHA1) > ./app/release_notes.txt
+            ./gradlew appDistributionUploadDevelopRelease
+
+# Orchestrate or schedule a set of jobs
+workflows:
+  version: 2
+  build_test_lint:
+    jobs:
+      - danger:
+          filters:
+            branches:
+              ignore:
+                - master
+                - develop
+      - build-and-test:
+          filters:
+            branches:
+              only:
+                - master
+                - develop

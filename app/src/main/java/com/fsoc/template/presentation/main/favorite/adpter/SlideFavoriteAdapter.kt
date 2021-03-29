@@ -24,7 +24,7 @@ class SlideFavoriteAdapter(private val context: Context) : PagerAdapter() {
     }
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
-        return view === `object`
+        return view == `object`
     }
 
     @SuppressLint("InflateParams")

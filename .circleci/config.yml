@@ -1,8 +1,12 @@
 version: 2.1
-# Use a package of configuration called an orb.
-orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.4.1
+
+defaults: &defaults
+  working_directory: ~/code
+  docker:
+    - image: circleci/android@sha256:57mTdPvOBOnVDfRnwBQCBLjS0rmAHDYyxrBZuBxHAZY
+  environment:
+    JAVA_OPTS: -Xmx2g
+    GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx2g -XX:+HeapDumpOnOutOfMemoryError"'
 
 commands:
   setup_gradle:
@@ -52,7 +56,22 @@ commands:
             echo $(git log --format=%B -n 1 $CIRCLE_SHA1) > ./app/release_notes.txt
             ./gradlew appDistributionUploadDevelopRelease
 
-# Orchestrate or schedule a set of jobs
+jobs:
+  danger:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_gradle
+      - setup_gem
+      - step_lint_danger
+  build-and-test:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_gradle
+      - step_build
+      - step_release
+
 workflows:
   version: 2
   build_test_lint:

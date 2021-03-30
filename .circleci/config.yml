@@ -3,11 +3,23 @@ version: 2.1
 orbs:
   android: circleci/android@0.2.1
 
+commands:
+  setup_gradle:
+    steps:
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+
 jobs:
   build:
     executor: android/android
 
     steps:
       - checkout
-      - run:
-          command: ./gradlew build
+      - setup_gradle

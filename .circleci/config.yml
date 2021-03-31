@@ -12,11 +12,11 @@ jobs:
       # checkout code mới từ PR
       - checkout
       # restore cache từ lần build cuối, kiểm tra sự thay đổi của tất cả các file gradle hoặc file có ảnh hưởng đến version trong gradle.
-      - restore_cache:
-          key: gradle-{{ checksum "build.gradle.kts" }}-{{ checksum  "buildSrc/src/main/kotlin/Config.kt" }}-{{ checksum  "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "app/build.gradle.kts" }}
-      - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
+      # - restore_cache:
+      #     key: gradle-{{ checksum "build.gradle.kts" }}-{{ checksum  "buildSrc/src/main/kotlin/Config.kt" }}-{{ checksum  "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "app/build.gradle.kts" }}
+      # - run:
+      #     name: Download Dependencies
+      #     command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle

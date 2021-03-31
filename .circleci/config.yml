@@ -1,46 +1,13 @@
 version: 2.1
+
+orbs:
+android: circleci/android@0.2.1
+
 jobs:
-  build:
-    # Đây là project folder name, nên đúng tên hoa, thường.
-    working_directory: ~/AndroidSetup
-    docker:
-      - image: circleci/android:api-28
-    environment:
-      GRADLE_OPTS: -Xmx4g -Dorg.gradle.daemon=false
-      JVM_OPTS: -Xmx4g
-    steps:
-      # checkout code mới từ PR
-      - checkout
-      # restore cache từ lần build cuối, kiểm tra sự thay đổi của tất cả các file gradle hoặc file có ảnh hưởng đến version trong gradle.
-      # - restore_cache:
-      #     key: gradle-{{ checksum "build.gradle.kts" }}-{{ checksum  "buildSrc/src/main/kotlin/Config.kt" }}-{{ checksum  "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "app/build.gradle.kts" }}
-      # - run:
-      #     name: Download Dependencies
-      #     command: ./gradlew androidDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: gradle-{{ checksum "build.gradle.kts" }}-{{ checksum  "buildSrc/src/main/kotlin/Config.kt" }}-{{ checksum  "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "app/build.gradle.kts" }}
-      - run:
-          # kiểm tra code style
-          name: Run Ktlint
-          command: ./gradlew ktlintCheck
-      - run:
-          # kiểm tra code smell
-          name: Run Detekt
-          command: ./gradlew detekt
-      - run:
-          name: Run UnitTest
-          # cú pháp test[Flavor][BuildType]UnitTest
-          command: ./gradlew testDebugUnitTest
-      - run:
-          name: Save UnitTest results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/test-results
-      - store_artifacts:
-          path: app/build/reports
-          destination: reports 
+ build:
+   executor: android/android
+
+   steps:
+     - checkout
+     - run:
+         command: ./gradlew build
